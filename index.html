@@ -135,17 +135,13 @@
 
             .decorative-shapes-container {
                 position: absolute;
-                right: 0; /* Align to the very right edge of page-container */
-                top: 50%;
-                transform: translateY(-50%);
-
-                /* Adjusted width and max-width for better scaling */
-                width: clamp(80px, 15vw, 200px);
-                max-width: 25%;
-                height: auto; /* Let height adjust based on the image's aspect ratio and new width */
-
-                /* SVG max height to prevent it from becoming too tall on certain aspect ratios */
-                max-height: clamp(150px, 30vh, 300px);
+                right: -55px;
+                top: 44%;
+                transform: translateY(-50%) rotate(-90deg);
+                width: clamp(120px, 25.666vw, 726px);
+                max-width: 30%;
+                height: auto;
+                max-height: clamp(200px, 40vh, 400px);
                 z-index: 0;
             }
 
@@ -160,12 +156,15 @@
             @media (max-width: 1024px) {
                 /* Tablets */
                 .video-container {
-                    max-width: 90%; /* Allow video to be a bit wider on tablets */
+                    max-width: 90%;
                     max-height: 70vh;
                 }
                 .decorative-shapes-container {
-                    width: clamp(70px, 12vw, 180px);
+                    width: clamp(100px, 15vw, 250px);
                     opacity: 0.8;
+                    right: calc(
+                        var(--base-padding) / 2
+                    ); /* Back to right side */
                 }
             }
 
@@ -194,11 +193,12 @@
                     text-align: center; /* Center footer text on mobile */
                 }
                 .decorative-shapes-container {
-                    width: clamp(60px, 15vw, 120px);
-                    max-height: clamp(100px, 20vh, 200px);
+                    width: clamp(80px, 15vw, 180px);
+                    max-height: clamp(150px, 25vh, 250px);
                     opacity: 0.7;
-                    /* Optionally move it slightly more into the padding area if needed */
-                    right: calc(var(--base-padding) / 4);
+                    right: calc(
+                        var(--base-padding) / 4
+                    ); /* Back to right side */
                 }
             }
 
@@ -211,10 +211,9 @@
                     max-height: 50vh;
                 }
                 .decorative-shapes-container {
-                    /* display: none; */ /* Keep it, but smaller */
-                    width: clamp(50px, 12vw, 80px);
+                    width: clamp(60px, 12vw, 120px);
                     opacity: 0.6;
-                    right: 5px; /* Closer to edge on very small screens */
+                    right: 5px; /* Back to right side */
                 }
                 .footer-left,
                 .footer-right {
