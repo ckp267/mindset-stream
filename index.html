@@ -27,19 +27,18 @@
             :root {
                 --bg-color: #4a4a4d; /* Dark grey from screenshot */
                 --text-color: #899390; /* Updated text color */
-                --border-color: #fff;
                 --menu-bg-color: #00afc0;
                 --menu-text-color: #fff;
                 --video-bg-color: #000;
                 --overlay-bg-color: rgba(0, 0, 0, 0.5);
                 --shadow-color: rgba(0, 0, 0, 0.2);
 
-                --content-max-width: 1200px; /* Max width for the main content column */
-                --base-padding: clamp(15px, 4vw, 30px); /* Responsive padding */
+                --content-max-width: 100%; /* Max width for the main content column */
+                --base-padding: clamp(15px, 4vw, 50px); /* Responsive padding */
                 --logo-height: clamp(
-                    45px,
-                    7vh,
-                    65px
+                    3vw,
+                    5vw,
+                    5vw
                 ); /* Responsive logo height */
                 --footer-font-size: clamp(
                     10px,
@@ -94,6 +93,7 @@
             }
 
             .logo {
+                width: var(--logo-height);
                 height: var(--logo-height);
                 width: auto;
                 display: block;
@@ -123,8 +123,8 @@
                 align-items: center;
                 width: 100%; /* Ensure main takes up available width in content-wrapper */
                 /* Add some vertical spacing */
-                margin-top: clamp(15px, 3vh, 30px);
-                margin-bottom: clamp(15px, 3vh, 30px);
+                margin-top: 0;
+                margin-bottom: 0;
             }
 
             /* Video Player Styles - integrated and adjusted */
@@ -134,7 +134,7 @@
                   e.g., 90% of its parent (main) to leave some background visible,
                   or a fixed pixel value like in the original PSD.
                   This will help make it feel more like the PSD's black frame. */
-                max-width: 85%; /* Adjust as needed, e.g. 800px, 900px etc. */
+                max-width: 70%; /* Adjust as needed, e.g. 800px, 900px etc. */
                 margin-left: auto; /* Center the video container if max-width is less than 100% */
                 margin-right: auto; /* Center the video container */
 
@@ -164,7 +164,6 @@
                 font-size: var(--footer-font-size);
                 flex-wrap: wrap; /* Allow items to wrap on smaller screens */
                 gap: 10px; /* Reduced gap slightly */
-                border-top: 2px solid var(--border-color); /* Use new text color with alpha for border */
                 /* Text alignment for children will be default (left) */
             }
 
@@ -270,7 +269,6 @@
                 align-items: center;
                 width: 100%;
                 position: relative;
-                border-bottom: 2px solid var(--border-color);
                 padding-bottom: var(--base-padding);
             }
         </style>
