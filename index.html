@@ -172,12 +172,18 @@
                 flex-basis: auto; /* Allow natural sizing */
                 /* On smaller screens when they stack, make them full width */
             }
+            @media (max-width: 1600px) {
+                /* Tablets */
+                .video-container {
+                    max-width: 85%;
+                    max-height: 70vh;
+                }
+            }
             /* Responsive Adjustments */
             @media (max-width: 1024px) {
                 /* Tablets */
                 .video-container {
-                    max-width: 90%;
-                    max-height: 70vh;
+                    max-width: 60%;
                 }
             }
 
@@ -188,7 +194,7 @@
                     --logo-height: clamp(50px, 8vh, 60px);
                 }
                 .video-container {
-                    max-width: 100%; /* Video can take more width on mobile */
+                    max-width: 65%; /* Video can take more width on mobile */
                     max-height: 60vh; /* Reduce max height further on mobile */
                 }
                 footer {
@@ -230,37 +236,100 @@
                 box-shadow: -2px 0 10px var(--shadow-color);
                 color: var(--menu-text-color);
                 padding: var(--base-padding);
-            }
-
-            .sliding-menu a {
-                color: var(--menu-text-color);
-                text-decoration: none;
-                display: block;
-                padding: 15px 0;
-                font-size: 1.2em;
-            }
-
-            .sliding-menu a:hover {
-                opacity: 0.8;
+                display: flex;
+                flex-direction: column;
             }
 
             .sliding-menu.open {
                 right: 0;
             }
 
-            .menu-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: var(--overlay-bg-color);
-                display: none;
-                z-index: 999;
+            .sliding-menu .close-button {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                color: var(--menu-text-color);
+                font-size: 40px;
+                cursor: pointer;
+                background: none;
+                border: none;
+                padding: 0;
+                line-height: 1;
+                transition: opacity 0.2s ease;
             }
 
-            .menu-overlay.open {
+            .sliding-menu .close-button:hover,
+            .sliding-menu .close-button:active {
+                opacity: 0.8;
+            }
+
+            .menu-section {
+                margin-top: 15px;
+                position: relative;
+                padding-bottom: 20px;
+            }
+
+            .menu-section::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background-color: var(--menu-text-color);
+                opacity: 0.3;
+            }
+
+            .menu-section:last-of-type {
+                margin-bottom: 20px;
+            }
+
+            .menu-section-title {
+                color: var(--menu-text-color);
+                font-size: 1.2em;
+                margin-bottom: 20px;
+                position: relative;
+            }
+
+            .menu-section-title::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background-color: var(--menu-text-color);
+                opacity: 0.3;
+            }
+
+            .menu-link {
+                color: var(--menu-text-color);
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                padding: 10px 0;
+                font-size: 1.1em;
+                transition: opacity 0.2s ease;
+            }
+
+            .menu-link:hover,
+            .menu-link:active {
+                opacity: 0.8;
+            }
+
+            .menu-link::before {
+                content: '→';
+                margin-right: 10px;
+            }
+
+            .liberty-life-logo {
+                margin-top: auto;
+                width: 50%;
+                height: auto;
                 display: block;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 115px;
             }
 
             header {
@@ -296,9 +365,26 @@
 
                 <!-- Sliding Menu -->
                 <div class="sliding-menu" id="slidingMenu">
-                    <!-- Menu content will go here -->
+                    <button class="close-button" id="closeMenu">×</button>
+
+                    <div class="menu-section">
+                        <div class="menu-section-title">Tv schedules</div>
+                        <a href="#" class="menu-link">High school</a>
+                        <a href="#" class="menu-link">Primary school</a>
+                    </div>
+
+                    <div class="menu-section">
+                        <div class="menu-section-title">Gets apps</div>
+                        <a href="#" class="menu-link">Learn</a>
+                        <a href="#" class="menu-link">Tenfold</a>
+                    </div>
+
+                    <img
+                        src="Liberty Life Logo.svg"
+                        alt="Liberty Life"
+                        class="liberty-life-logo"
+                    />
                 </div>
-                <div class="menu-overlay" id="menuOverlay"></div>
 
                 <main>
                     <div class="video-container">
@@ -391,16 +477,17 @@
             }
 
             // Menu functionality
-            const menuIcon = document.getElementById('menuIcon');
+            const closeButton = document.getElementById('closeMenu');
             const slidingMenu = document.getElementById('slidingMenu');
-            const menuOverlay = document.getElementById('menuOverlay');
+
+            closeButton.addEventListener('click', toggleMenu);
+
+            const menuIcon = document.getElementById('menuIcon');
 
             menuIcon.addEventListener('click', toggleMenu);
-            menuOverlay.addEventListener('click', toggleMenu);
 
             function toggleMenu() {
                 slidingMenu.classList.toggle('open');
-                menuOverlay.classList.toggle('open');
             }
 
             // Close menu when pressing Escape key
@@ -408,6 +495,20 @@
                 if (
                     e.key === 'Escape' &&
                     slidingMenu.classList.contains('open')
+                ) {
+                    toggleMenu();
+                }
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                const menu = document.getElementById('slidingMenu');
+                const menuIcon = document.getElementById('menuIcon');
+
+                if (
+                    menu.classList.contains('open') &&
+                    !menu.contains(e.target) &&
+                    !menuIcon.contains(e.target)
                 ) {
                     toggleMenu();
                 }
