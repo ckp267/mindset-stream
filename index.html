@@ -178,11 +178,7 @@
                     max-height: 70vh;
                 }
                 .decorative-shapes-container {
-                    width: clamp(100px, 15vw, 250px);
-                    opacity: 0.8;
-                    right: calc(
-                        var(--base-padding) / 2
-                    ); /* Back to right side */
+                    display: none;
                 }
             }
 
@@ -210,14 +206,6 @@
                     width: 100%; /* Make footer text blocks take full width when stacked */
                     text-align: center; /* Center footer text on mobile */
                 }
-                .decorative-shapes-container {
-                    width: clamp(80px, 15vw, 180px);
-                    max-height: clamp(150px, 25vh, 250px);
-                    opacity: 0.7;
-                    right: calc(
-                        var(--base-padding) / 4
-                    ); /* Back to right side */
-                }
             }
 
             @media (max-width: 480px) {
@@ -227,11 +215,6 @@
                 }
                 .video-container {
                     max-height: 50vh;
-                }
-                .decorative-shapes-container {
-                    width: clamp(60px, 12vw, 120px);
-                    opacity: 0.6;
-                    right: 5px; /* Back to right side */
                 }
                 .footer-left,
                 .footer-right {
