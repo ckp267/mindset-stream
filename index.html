@@ -10,9 +10,9 @@
       --bg-color: #4A4A4D; /* Dark grey from screenshot */
       --text-color: #E0E0E0; /* Light grey for text */
       --content-max-width: 1200px; /* Max width for the main content column */
-      --base-padding: 30px; /* Base padding for page and elements */
-      --logo-height: 50px;
-      --footer-font-size: 12px;
+      --base-padding: clamp(15px, 3vw, 30px); /* Responsive padding */
+      --logo-height: clamp(40px, 5vh, 50px); /* Responsive logo height */
+      --footer-font-size: clamp(10px, 1.5vh, 12px); /* Responsive footer font */
     }
 
     body {
@@ -21,26 +21,30 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       line-height: 1.6;
+      /* Ensure body itself doesn't cause overflow if page-container is full width */
+      overflow-x: hidden;
     }
 
     .page-container {
       min-height: 100vh;
-      display: flex; /* Changed from 'block' for better flex behavior if needed */
-      flex-direction: column; /* Ensures children stack vertically */
-      position: relative; /* For absolute positioning of decorative shapes */
+      display: flex;
+      flex-direction: column;
+      position: relative;
       padding: var(--base-padding);
       box-sizing: border-box;
-      overflow-x: hidden; /* Prevent horizontal scroll from decorative shapes */
+      /* overflow-x: hidden; /* Already on body, but can keep here too if desired */
+      width: 100%; /* Ensure page-container takes full viewport width */
     }
 
     .content-wrapper {
       width: 100%;
       max-width: var(--content-max-width);
-      margin: 0 auto; /* Center content column */
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      flex-grow: 1; /* Allows main to expand and push footer down */
-      z-index: 1; /* Keep content above decorative shapes */
+      flex-grow: 1;
+      z-index: 1;
+      position: relative; /* Added for stacking context if needed */
     }
 
     header {
@@ -62,13 +66,15 @@
 
     /* Video Player Styles - integrated and adjusted */
     .video-container {
-      width: 100%; /* Takes full width of its parent 'main' area */
-      /* max-width: 800px; */ /* Example: if you want to constrain video width further than content-wrapper */
-      aspect-ratio: 16 / 9; /* Default aspect ratio, JS will update */
-      background: black;   /* This is the black frame for the video */
+      width: 100%;
+      /* max-width: 800px; */ /* Keep commented or adjust if needed */
+      aspect-ratio: 16 / 9;
+      background: black;
       position: relative;
-      margin-top: 20px; /* Space between logo and video */
-      margin-bottom: 20px; /* Space between video and footer */
+      margin-top: clamp(10px, 2vh, 20px); /* Responsive margin */
+      margin-bottom: clamp(10px, 2vh, 20px); /* Responsive margin */
+      /* Ensure it doesn't push out of the content-wrapper unexpectedly */
+      max-width: 100%; 
     }
 
     .video-container video {
@@ -96,68 +102,57 @@
 
     .decorative-shapes-container {
       position: absolute;
-      right: var(--base-padding); /* Positioned relative to page-container's padding */
+      right: 0; /* Align to the very right edge of page-container */
       top: 50%;
       transform: translateY(-50%);
-      width: auto; /* SVG will scale based on height */
-      height: clamp(200px, 35vh, 346.44px); /* Responsive height, max based on SVG's viewBox height */
-      z-index: 0; /* Behind content-wrapper if they were to overlap */
+      
+      /* Adjust width constraints */
+      width: clamp(100px, 20vw, 250px); /* Control width more directly */
+      max-width: 30%; /* Max 30% of the parent's width (page-container) */
+      height: auto;   /* Let height adjust based on the image's aspect ratio and new width */
+      
+      /* SVG max height to prevent it from becoming too tall on certain aspect ratios */
+      max-height: clamp(200px, 35vh, 346.44px); 
+      z-index: 0;
     }
 
     .decorative-shapes-container img {
-      height: 100%;
-      width: auto;
+      width: 100%; /* Make image fill the new width of the container */
+      height: 100%; /* Make image fill the new height of the container */
+      object-fit: contain; /* Ensure aspect ratio is maintained within container bounds */
       display: block;
     }
 
     /* Responsive Adjustments */
     @media (max-width: 1024px) { /* Tablets */
-      :root {
-        --base-padding: 20px;
-        --logo-height: 45px;
-      }
+      /* :root values will now use clamp, specific overrides might not be as necessary */
+      /* but can be kept for finer control */
       .decorative-shapes-container {
-        height: clamp(150px, 30vh, 280px);
-        right: 10px; /* Bring it slightly more in */
+        width: clamp(80px, 18vw, 200px);
         opacity: 0.8;
-      }
-       .video-container {
-        margin-top: 15px;
-        margin-bottom: 15px;
+        /* right: 10px; /* no longer needed if right:0 on page-container */
       }
     }
 
     @media (max-width: 768px) { /* Mobile */
-      :root {
-        --base-padding: 15px;
-        --logo-height: 40px;
-        --footer-font-size: 10px;
-      }
-      .content-wrapper{
-        /* On mobile, content might need to be closer to full width */
+      .content-wrapper {
+        padding-left: 5px; /* Add slight padding if content touches edges */
+        padding-right: 5px;
       }
       footer {
         flex-direction: column;
-        align-items: flex-start; /* Align text to the left */
+        align-items: flex-start;
       }
       .decorative-shapes-container {
-        /* Option: Make smaller and less prominent or hide */
-         height: clamp(100px, 20vh, 180px);
-         opacity: 0.6;
-         right: 5px;
-      }
-      .video-container {
-        margin-top: 10px;
-        margin-bottom: 10px;
+        width: clamp(60px, 15vw, 150px);
+        opacity: 0.6;
+        /* right: 5px; /* no longer needed */
       }
     }
 
     @media (max-width: 480px) { /* Small Mobile */
-       :root {
-        --footer-font-size: 9px;
-      }
       .decorative-shapes-container {
-        display: none; /* Hide on very small screens to prevent clutter */
+        display: none;
       }
     }
 
