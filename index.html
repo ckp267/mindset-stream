@@ -142,35 +142,12 @@
                 flex-basis: auto; /* Allow natural sizing */
                 /* On smaller screens when they stack, make them full width */
             }
-
-            .decorative-shapes-container {
-                position: absolute;
-                right: -55px;
-                top: 44%;
-                transform: translateY(-50%) rotate(-90deg);
-                width: clamp(120px, 25.666vw, 726px);
-                max-width: 30%;
-                height: auto;
-                max-height: clamp(200px, 40vh, 400px);
-                z-index: 0;
-            }
-
-            .decorative-shapes-container img {
-                width: 100%; /* Make image fill the new width of the container */
-                height: 100%; /* Make image fill the new height of the container */
-                object-fit: contain; /* Ensure aspect ratio is maintained within container bounds */
-                display: block;
-            }
-
             /* Responsive Adjustments */
             @media (max-width: 1024px) {
                 /* Tablets */
                 .video-container {
                     max-width: 90%;
                     max-height: 70vh;
-                }
-                .decorative-shapes-container {
-                    display: none;
                 }
             }
 
@@ -236,10 +213,6 @@
                         Reg Number: 2002 / 003517 / 08 - South Africa
                     </div>
                 </footer>
-            </div>
-
-            <div class="decorative-shapes-container">
-                <img src="Shape-Green.svg" alt="Decorative Green Shapes" />
             </div>
         </div>
 
