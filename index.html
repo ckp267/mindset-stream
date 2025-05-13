@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mindset Stream</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    :root {
+      --bg-color: #4A4A4D; /* Dark grey from screenshot */
+      --text-color: #E0E0E0; /* Light grey for text */
+      --content-max-width: 1200px; /* Max width for the main content column */
+      --base-padding: 30px; /* Base padding for page and elements */
+      --logo-height: 50px;
+      --footer-font-size: 12px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .page-container {
+      min-height: 100vh;
+      display: flex; /* Changed from 'block' for better flex behavior if needed */
+      flex-direction: column; /* Ensures children stack vertically */
+      position: relative; /* For absolute positioning of decorative shapes */
+      padding: var(--base-padding);
+      box-sizing: border-box;
+      overflow-x: hidden; /* Prevent horizontal scroll from decorative shapes */
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: var(--content-max-width);
+      margin: 0 auto; /* Center content column */
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1; /* Allows main to expand and push footer down */
+      z-index: 1; /* Keep content above decorative shapes */
+    }
+
+    header {
+      padding-bottom: var(--base-padding);
+    }
+
+    .logo {
+      height: var(--logo-height);
+      width: auto;
+    }
+
+    main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%; /* Ensure main takes up available width in content-wrapper */
+    }
+
+    /* Video Player Styles - integrated and adjusted */
+    .video-container {
+      width: 100%; /* Takes full width of its parent 'main' area */
+      /* max-width: 800px; */ /* Example: if you want to constrain video width further than content-wrapper */
+      aspect-ratio: 16 / 9; /* Default aspect ratio, JS will update */
+      background: black;   /* This is the black frame for the video */
+      position: relative;
+      margin-top: 20px; /* Space between logo and video */
+      margin-bottom: 20px; /* Space between video and footer */
+    }
+
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Letterboxes if aspect ratio mismatch */
+      display: none;       /* Unhidden by script when ready */
+    }
+    /* End Video Player Styles */
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--base-padding);
+      font-size: var(--footer-font-size);
+      flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+      gap: 10px; /* Space between items if they wrap */
+      border-top: 1px solid rgba(255, 255, 255, 0.1); /* Optional subtle separator */
+    }
+
+    .footer-left, .footer-right {
+      flex-basis: auto; /* Allow natural sizing */
+    }
+
+    .decorative-shapes-container {
+      position: absolute;
+      right: var(--base-padding); /* Positioned relative to page-container's padding */
+      top: 50%;
+      transform: translateY(-50%);
+      width: auto; /* SVG will scale based on height */
+      height: clamp(200px, 35vh, 346.44px); /* Responsive height, max based on SVG's viewBox height */
+      z-index: 0; /* Behind content-wrapper if they were to overlap */
+    }
+
+    .decorative-shapes-container img {
+      height: 100%;
+      width: auto;
+      display: block;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) { /* Tablets */
+      :root {
+        --base-padding: 20px;
+        --logo-height: 45px;
+      }
+      .decorative-shapes-container {
+        height: clamp(150px, 30vh, 280px);
+        right: 10px; /* Bring it slightly more in */
+        opacity: 0.8;
+      }
+       .video-container {
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+    }
+
+    @media (max-width: 768px) { /* Mobile */
+      :root {
+        --base-padding: 15px;
+        --logo-height: 40px;
+        --footer-font-size: 10px;
+      }
+      .content-wrapper{
+        /* On mobile, content might need to be closer to full width */
+      }
+      footer {
+        flex-direction: column;
+        align-items: flex-start; /* Align text to the left */
+      }
+      .decorative-shapes-container {
+        /* Option: Make smaller and less prominent or hide */
+         height: clamp(100px, 20vh, 180px);
+         opacity: 0.6;
+         right: 5px;
+      }
+      .video-container {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+
+    @media (max-width: 480px) { /* Small Mobile */
+       :root {
+        --footer-font-size: 9px;
+      }
+      .decorative-shapes-container {
+        display: none; /* Hide on very small screens to prevent clutter */
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <div class="content-wrapper">
+      <header>
+        <img src="MindSet-Logo.svg" alt="Mindset Logo" class="logo">
+      </header>
+
+      <main>
+        <div class="video-container">
+          <video id="video" controls playsinline></video>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-left">MINDSET NETWORK NPC IS A REGISTERED NOT-FOR-PROFIT</div>
+        <div class="footer-right">Reg Number: 2002 / 003517 / 08 - South Africa</div>
+      </footer>
+    </div>
+
+    <div class="decorative-shapes-container">
+      <img src="Shape-Green.svg" alt="Decorative Green Shapes">
+    </div>
+  </div>
+
+  <script>
+    const video     = document.getElementById('video');
+    const container = video.parentElement; // This is .video-container
+    const url       = 'https://globecast.live/Mindset/index.m3u8?token=odr9Nx6RlSVDy0';
+
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(url);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, (_evt, data) => {
+        console.log('🔍 hls.levels →', hls.levels);
+        // The 'level' object might not have width/height directly at data.startLevel
+        // It's better to access width/height from hls.levels[levelIdx]
+        const levelIdx = data.startLevel !== undefined ? data.startLevel : (hls.levels.length > 0 ? 0 : -1) ;
+
+        if (levelIdx !== -1 && hls.levels[levelIdx]) {
+            const { width, height } = hls.levels[levelIdx];
+            if (width && height) {
+                container.style.aspectRatio = `${width} / ${height}`;
+            }
+        }
+        video.style.display = 'block';
+        video.play().catch((error) => {
+            console.log('Video autoplay prevented:', error);
+            // Autoplay might be blocked, user interaction might be needed.
+        });
+      });
+
+      hls.on(Hls.Events.LEVEL_SWITCHED, (_evt, data) => {
+        const { level } = data; // level is an index
+        if (hls.levels[level]) {
+            const { width, height } = hls.levels[level];
+            if (width && height) {
+                container.style.aspectRatio = `${width} / ${height}`;
+            }
+        }
+      });
+
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS (Safari)
+      video.src = url;
+      video.addEventListener('loadedmetadata', () => {
+        const w = video.videoWidth;
+        const h = video.videoHeight;
+        if (w && h) { // Ensure w and h are valid before setting aspect ratio
+            container.style.aspectRatio = `${w} / ${h}`;
+        }
+        video.style.display = 'block';
+         video.play().catch((error) => {
+            console.log('Video autoplay prevented (Safari):', error);
+        });
+      });
+       video.addEventListener('canplay', () => { // Ensure video is ready before trying to play
+        video.style.display = 'block';
+        // video.play().catch(() => {}); // Autoplay can be attempted here too
+      });
+    } else {
+      console.error('HLS not supported in this browser');
+      container.innerHTML = '<p style="color: white; padding: 20px;">Sorry, HLS video playback is not supported in your browser.</p>';
+    }
+  </script>
+</body>
+</html>
