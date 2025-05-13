@@ -6,21 +6,21 @@
         <link
             rel="apple-touch-icon"
             sizes="180x180"
-            href="apple-touch-icon.png"
+            href="./apple-touch-icon.png"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="favicon-32x32.png"
+            href="./favicon-32x32.png"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="favicon-16x16.png"
+            href="./favicon-16x16.png"
         />
-        <link rel="manifest" href="site.webmanifest" />
+        <link rel="manifest" href="./site.webmanifest" />
         <title>Mindset Stream</title>
         <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
         <style>
@@ -65,7 +65,6 @@
                 position: relative;
                 padding: var(--base-padding);
                 box-sizing: border-box;
-                /* overflow-x: hidden; /* Already on body, but can keep here too if desired */
                 width: 100%; /* Ensure page-container takes full viewport width */
             }
 
@@ -78,10 +77,6 @@
                 flex-grow: 1;
                 z-index: 1;
                 position: relative; /* Added for stacking context if needed */
-            }
-
-            header {
-                /* Removed padding-bottom from here, will control spacing via content-wrapper gap or main margin-top */
             }
 
             .logo {
@@ -105,9 +100,9 @@
             .video-container {
                 width: 100%;
                 /* Set a max-width for the video container itself, 
-         e.g., 90% of its parent (main) to leave some background visible,
-         or a fixed pixel value like in the original PSD.
-         This will help make it feel more like the PSD's black frame. */
+                  e.g., 90% of its parent (main) to leave some background visible,
+                  or a fixed pixel value like in the original PSD.
+                  This will help make it feel more like the PSD's black frame. */
                 max-width: 85%; /* Adjust as needed, e.g. 800px, 900px etc. */
                 margin-left: auto; /* Center the video container if max-width is less than 100% */
                 margin-right: auto; /* Center the video container */
@@ -115,9 +110,6 @@
                 aspect-ratio: 16 / 9; /* JS will try to update this */
                 background: black;
                 position: relative;
-                /* Remove top/bottom margins here if 'main' handles it */
-                /* margin-top: clamp(10px, 2vh, 20px); */
-                /* margin-bottom: clamp(10px, 2vh, 20px); */
 
                 /* Add a max-height based on viewport height to prevent it from being too tall on mobile */
                 max-height: 75vh; /* 75% of the viewport height */
@@ -187,10 +179,6 @@
                 :root {
                     /* Further increase logo base size on mobile if still too small */
                     --logo-height: clamp(50px, 8vh, 60px);
-                }
-                .content-wrapper {
-                    /* padding-left: 5px; 
-        padding-right: 5px; */ /* Padding is handled by page-container's clamp */
                 }
                 .video-container {
                     max-width: 100%; /* Video can take more width on mobile */
