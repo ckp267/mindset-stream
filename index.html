@@ -1,293 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mindset Stream</title>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <style>
-    :root {
-      --bg-color: #4A4A4D; /* Dark grey from screenshot */
-      --text-color: #899390; /* Updated text color */
-      --content-max-width: 1200px; /* Max width for the main content column */
-      --base-padding: clamp(15px, 4vw, 30px); /* Responsive padding */
-      --logo-height: clamp(45px, 7vh, 65px); /* Responsive logo height */
-      --footer-font-size: clamp(10px, 1.5vh, 12px); /* Responsive footer font */
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Mindset Stream</title>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+        <style>
+            :root {
+                --bg-color: #4a4a4d; /* Dark grey from screenshot */
+                --text-color: #899390; /* Updated text color */
+                --content-max-width: 1200px; /* Max width for the main content column */
+                --base-padding: clamp(15px, 4vw, 30px); /* Responsive padding */
+                --logo-height: clamp(
+                    45px,
+                    7vh,
+                    65px
+                ); /* Responsive logo height */
+                --footer-font-size: clamp(
+                    10px,
+                    1.5vh,
+                    12px
+                ); /* Responsive footer font */
+            }
 
-    body {
-      margin: 0;
-      font-family: "DIN Medium", Arial, Helvetica, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
-      /* Ensure body itself doesn't cause overflow if page-container is full width */
-      overflow-x: hidden;
-    }
+            @font-face {
+                font-family: 'DIN Medium';
+                font-style: normal;
+                font-weight: 400;
+                src: url('fonts/DIN-Medium-Regular.ttf');
+            }
 
-    .page-container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      padding: var(--base-padding);
-      box-sizing: border-box;
-      /* overflow-x: hidden; /* Already on body, but can keep here too if desired */
-      width: 100%; /* Ensure page-container takes full viewport width */
-    }
+            body {
+                margin: 0;
+                font-family: 'DIN Medium', Arial, Helvetica, sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                line-height: 1.6;
+                /* Ensure body itself doesn't cause overflow if page-container is full width */
+                overflow-x: hidden;
+            }
 
-    .content-wrapper {
-      width: 100%;
-      max-width: var(--content-max-width);
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      z-index: 1;
-      position: relative; /* Added for stacking context if needed */
-    }
+            .page-container {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                padding: var(--base-padding);
+                box-sizing: border-box;
+                /* overflow-x: hidden; /* Already on body, but can keep here too if desired */
+                width: 100%; /* Ensure page-container takes full viewport width */
+            }
 
-    header {
-      /* Removed padding-bottom from here, will control spacing via content-wrapper gap or main margin-top */
-    }
+            .content-wrapper {
+                width: 100%;
+                max-width: var(--content-max-width);
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                z-index: 1;
+                position: relative; /* Added for stacking context if needed */
+            }
 
-    .logo {
-      height: var(--logo-height);
-      width: auto;
-      display: block; /* Ensures it behaves as a block for margins if needed */
-    }
+            header {
+                /* Removed padding-bottom from here, will control spacing via content-wrapper gap or main margin-top */
+            }
 
-    main {
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%; /* Ensure main takes up available width in content-wrapper */
-      /* Add some vertical spacing */
-      margin-top: clamp(15px, 3vh, 30px);
-      margin-bottom: clamp(15px, 3vh, 30px);
-    }
+            .logo {
+                height: var(--logo-height);
+                width: auto;
+                display: block; /* Ensures it behaves as a block for margins if needed */
+            }
 
-    /* Video Player Styles - integrated and adjusted */
-    .video-container {
-      width: 100%;
-      /* Set a max-width for the video container itself, 
+            main {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%; /* Ensure main takes up available width in content-wrapper */
+                /* Add some vertical spacing */
+                margin-top: clamp(15px, 3vh, 30px);
+                margin-bottom: clamp(15px, 3vh, 30px);
+            }
+
+            /* Video Player Styles - integrated and adjusted */
+            .video-container {
+                width: 100%;
+                /* Set a max-width for the video container itself, 
          e.g., 90% of its parent (main) to leave some background visible,
          or a fixed pixel value like in the original PSD.
          This will help make it feel more like the PSD's black frame. */
-      max-width: 85%; /* Adjust as needed, e.g. 800px, 900px etc. */
-      margin-left: auto; /* Center the video container if max-width is less than 100% */
-      margin-right: auto; /* Center the video container */
-      
-      aspect-ratio: 16 / 9; /* JS will try to update this */
-      background: black;
-      position: relative;
-      /* Remove top/bottom margins here if 'main' handles it */
-      /* margin-top: clamp(10px, 2vh, 20px); */
-      /* margin-bottom: clamp(10px, 2vh, 20px); */
-      
-      /* Add a max-height based on viewport height to prevent it from being too tall on mobile */
-      max-height: 75vh; /* 75% of the viewport height */
-      overflow: hidden; /* Ensure video doesn't spill out if aspect ratios mismatch badly */
-    }
+                max-width: 85%; /* Adjust as needed, e.g. 800px, 900px etc. */
+                margin-left: auto; /* Center the video container if max-width is less than 100% */
+                margin-right: auto; /* Center the video container */
 
-    .video-container video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Letterboxes if aspect ratio mismatch */
-      display: none;       /* Unhidden by script when ready */
-      /* The video itself should fill the container, but max-height on container will limit it */
-    }
-    /* End Video Player Styles */
+                aspect-ratio: 16 / 9; /* JS will try to update this */
+                background: black;
+                position: relative;
+                /* Remove top/bottom margins here if 'main' handles it */
+                /* margin-top: clamp(10px, 2vh, 20px); */
+                /* margin-bottom: clamp(10px, 2vh, 20px); */
 
-    footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center; /* Vertically center align items */
-      padding-top: var(--base-padding);
-      font-size: var(--footer-font-size);
-      flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-      gap: 10px; /* Reduced gap slightly */
-      border-top: 1px solid rgba(137, 147, 144, 0.2); /* Use new text color with alpha for border */
-      /* Text alignment for children will be default (left) */
-    }
+                /* Add a max-height based on viewport height to prevent it from being too tall on mobile */
+                max-height: 75vh; /* 75% of the viewport height */
+                overflow: hidden; /* Ensure video doesn't spill out if aspect ratios mismatch badly */
+            }
 
-    .footer-left, .footer-right {
-      flex-basis: auto; /* Allow natural sizing */
-      /* On smaller screens when they stack, make them full width */
-    }
+            .video-container video {
+                width: 100%;
+                height: 100%;
+                object-fit: contain; /* Letterboxes if aspect ratio mismatch */
+                display: none; /* Unhidden by script when ready */
+                /* The video itself should fill the container, but max-height on container will limit it */
+            }
+            /* End Video Player Styles */
 
-    .decorative-shapes-container {
-      position: absolute;
-      right: 0; /* Align to the very right edge of page-container */
-      top: 50%;
-      transform: translateY(-50%);
-      
-      /* Adjusted width and max-width for better scaling */
-      width: clamp(80px, 15vw, 200px); 
-      max-width: 25%; 
-      height: auto;   /* Let height adjust based on the image's aspect ratio and new width */
-      
-      /* SVG max height to prevent it from becoming too tall on certain aspect ratios */
-      max-height: clamp(150px, 30vh, 300px);
-      z-index: 0;
-    }
+            footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center; /* Vertically center align items */
+                padding-top: var(--base-padding);
+                font-size: var(--footer-font-size);
+                flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+                gap: 10px; /* Reduced gap slightly */
+                border-top: 1px solid rgba(137, 147, 144, 0.2); /* Use new text color with alpha for border */
+                /* Text alignment for children will be default (left) */
+            }
 
-    .decorative-shapes-container img {
-      width: 100%; /* Make image fill the new width of the container */
-      height: 100%; /* Make image fill the new height of the container */
-      object-fit: contain; /* Ensure aspect ratio is maintained within container bounds */
-      display: block;
-    }
+            .footer-left,
+            .footer-right {
+                flex-basis: auto; /* Allow natural sizing */
+                /* On smaller screens when they stack, make them full width */
+            }
 
-    /* Responsive Adjustments */
-    @media (max-width: 1024px) { /* Tablets */
-      .video-container {
-        max-width: 90%; /* Allow video to be a bit wider on tablets */
-        max-height: 70vh;
-      }
-      .decorative-shapes-container {
-        width: clamp(70px, 12vw, 180px);
-        opacity: 0.8;
-      }
-    }
+            .decorative-shapes-container {
+                position: absolute;
+                right: 0; /* Align to the very right edge of page-container */
+                top: 50%;
+                transform: translateY(-50%);
 
-    @media (max-width: 768px) { /* Mobile */
-      :root {
-         /* Further increase logo base size on mobile if still too small */
-        --logo-height: clamp(50px, 8vh, 60px);
-      }
-      .content-wrapper {
-        /* padding-left: 5px; 
+                /* Adjusted width and max-width for better scaling */
+                width: clamp(80px, 15vw, 200px);
+                max-width: 25%;
+                height: auto; /* Let height adjust based on the image's aspect ratio and new width */
+
+                /* SVG max height to prevent it from becoming too tall on certain aspect ratios */
+                max-height: clamp(150px, 30vh, 300px);
+                z-index: 0;
+            }
+
+            .decorative-shapes-container img {
+                width: 100%; /* Make image fill the new width of the container */
+                height: 100%; /* Make image fill the new height of the container */
+                object-fit: contain; /* Ensure aspect ratio is maintained within container bounds */
+                display: block;
+            }
+
+            /* Responsive Adjustments */
+            @media (max-width: 1024px) {
+                /* Tablets */
+                .video-container {
+                    max-width: 90%; /* Allow video to be a bit wider on tablets */
+                    max-height: 70vh;
+                }
+                .decorative-shapes-container {
+                    width: clamp(70px, 12vw, 180px);
+                    opacity: 0.8;
+                }
+            }
+
+            @media (max-width: 768px) {
+                /* Mobile */
+                :root {
+                    /* Further increase logo base size on mobile if still too small */
+                    --logo-height: clamp(50px, 8vh, 60px);
+                }
+                .content-wrapper {
+                    /* padding-left: 5px; 
         padding-right: 5px; */ /* Padding is handled by page-container's clamp */
-      }
-      .video-container {
-        max-width: 100%; /* Video can take more width on mobile */
-        max-height: 60vh; /* Reduce max height further on mobile */
-      }
-      footer {
-        flex-direction: column;
-        align-items: flex-start; /* Align text to the left for stacked items */
-        gap: 5px; /* Smaller gap for stacked footer items */
-      }
-      .footer-left, .footer-right {
-        width: 100%; /* Make footer text blocks take full width when stacked */
-        text-align: center; /* Center footer text on mobile */
-      }
-      .decorative-shapes-container {
-        width: clamp(60px, 15vw, 120px);
-        max-height: clamp(100px, 20vh, 200px);
-        opacity: 0.7;
-         /* Optionally move it slightly more into the padding area if needed */
-        right: calc(var(--base-padding) / 4);
-      }
-    }
+                }
+                .video-container {
+                    max-width: 100%; /* Video can take more width on mobile */
+                    max-height: 60vh; /* Reduce max height further on mobile */
+                }
+                footer {
+                    flex-direction: column;
+                    align-items: flex-start; /* Align text to the left for stacked items */
+                    gap: 5px; /* Smaller gap for stacked footer items */
+                }
+                .footer-left,
+                .footer-right {
+                    width: 100%; /* Make footer text blocks take full width when stacked */
+                    text-align: center; /* Center footer text on mobile */
+                }
+                .decorative-shapes-container {
+                    width: clamp(60px, 15vw, 120px);
+                    max-height: clamp(100px, 20vh, 200px);
+                    opacity: 0.7;
+                    /* Optionally move it slightly more into the padding area if needed */
+                    right: calc(var(--base-padding) / 4);
+                }
+            }
 
-    @media (max-width: 480px) { /* Small Mobile */
-      :root {
-        --logo-height: clamp(45px, 7vh, 55px);
-      }
-       .video-container {
-        max-height: 50vh; 
-      }
-      .decorative-shapes-container {
-         /* display: none; */ /* Keep it, but smaller */
-        width: clamp(50px, 12vw, 80px);
-        opacity: 0.6;
-        right: 5px; /* Closer to edge on very small screens */
-      }
-       .footer-left, .footer-right {
-        font-size: 0.9em; /* Slightly smaller font for footer on tiny screens */
-      }
-    }
+            @media (max-width: 480px) {
+                /* Small Mobile */
+                :root {
+                    --logo-height: clamp(45px, 7vh, 55px);
+                }
+                .video-container {
+                    max-height: 50vh;
+                }
+                .decorative-shapes-container {
+                    /* display: none; */ /* Keep it, but smaller */
+                    width: clamp(50px, 12vw, 80px);
+                    opacity: 0.6;
+                    right: 5px; /* Closer to edge on very small screens */
+                }
+                .footer-left,
+                .footer-right {
+                    font-size: 0.9em; /* Slightly smaller font for footer on tiny screens */
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-container">
+            <div class="content-wrapper">
+                <header>
+                    <img
+                        src="MindSet-Logo.svg"
+                        alt="Mindset Logo"
+                        class="logo"
+                    />
+                </header>
 
-  </style>
-</head>
-<body>
-  <div class="page-container">
-    <div class="content-wrapper">
-      <header>
-        <img src="MindSet-Logo.svg" alt="Mindset Logo" class="logo">
-      </header>
+                <main>
+                    <div class="video-container">
+                        <video id="video" controls playsinline></video>
+                    </div>
+                </main>
 
-      <main>
-        <div class="video-container">
-          <video id="video" controls playsinline></video>
+                <footer>
+                    <div class="footer-left">
+                        MINDSET NETWORK NPC IS A REGISTERED NOT-FOR-PROFIT
+                    </div>
+                    <div class="footer-right">
+                        Reg Number: 2002 / 003517 / 08 - South Africa
+                    </div>
+                </footer>
+            </div>
+
+            <div class="decorative-shapes-container">
+                <img src="Shape-Green.svg" alt="Decorative Green Shapes" />
+            </div>
         </div>
-      </main>
 
-      <footer>
-        <div class="footer-left">MINDSET NETWORK NPC IS A REGISTERED NOT-FOR-PROFIT</div>
-        <div class="footer-right">Reg Number: 2002 / 003517 / 08 - South Africa</div>
-      </footer>
-    </div>
+        <script>
+            const video = document.getElementById('video');
+            const container = video.parentElement; // This is .video-container
+            const url =
+                'https://globecast.live/Mindset/index.m3u8?token=odr9Nx6RlSVDy0';
 
-    <div class="decorative-shapes-container">
-      <img src="Shape-Green.svg" alt="Decorative Green Shapes">
-    </div>
-  </div>
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
 
-  <script>
-    const video     = document.getElementById('video');
-    const container = video.parentElement; // This is .video-container
-    const url       = 'https://globecast.live/Mindset/index.m3u8?token=odr9Nx6RlSVDy0';
+                hls.on(Hls.Events.MANIFEST_PARSED, (_evt, data) => {
+                    console.log('🔍 hls.levels →', hls.levels);
+                    // The 'level' object might not have width/height directly at data.startLevel
+                    // It's better to access width/height from hls.levels[levelIdx]
+                    const levelIdx =
+                        data.startLevel !== undefined
+                            ? data.startLevel
+                            : hls.levels.length > 0
+                            ? 0
+                            : -1;
 
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(url);
-      hls.attachMedia(video);
+                    if (levelIdx !== -1 && hls.levels[levelIdx]) {
+                        const { width, height } = hls.levels[levelIdx];
+                        if (width && height) {
+                            container.style.aspectRatio = `${width} / ${height}`;
+                        }
+                    }
+                    video.style.display = 'block';
+                    video.play().catch((error) => {
+                        console.log('Video autoplay prevented:', error);
+                        // Autoplay might be blocked, user interaction might be needed.
+                    });
+                });
 
-      hls.on(Hls.Events.MANIFEST_PARSED, (_evt, data) => {
-        console.log('🔍 hls.levels →', hls.levels);
-        // The 'level' object might not have width/height directly at data.startLevel
-        // It's better to access width/height from hls.levels[levelIdx]
-        const levelIdx = data.startLevel !== undefined ? data.startLevel : (hls.levels.length > 0 ? 0 : -1) ;
-
-        if (levelIdx !== -1 && hls.levels[levelIdx]) {
-            const { width, height } = hls.levels[levelIdx];
-            if (width && height) {
-                container.style.aspectRatio = `${width} / ${height}`;
+                hls.on(Hls.Events.LEVEL_SWITCHED, (_evt, data) => {
+                    const { level } = data; // level is an index
+                    if (hls.levels[level]) {
+                        const { width, height } = hls.levels[level];
+                        if (width && height) {
+                            container.style.aspectRatio = `${width} / ${height}`;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS (Safari)
+                video.src = url;
+                video.addEventListener('loadedmetadata', () => {
+                    const w = video.videoWidth;
+                    const h = video.videoHeight;
+                    if (w && h) {
+                        // Ensure w and h are valid before setting aspect ratio
+                        container.style.aspectRatio = `${w} / ${h}`;
+                    }
+                    video.style.display = 'block';
+                    video.play().catch((error) => {
+                        console.log(
+                            'Video autoplay prevented (Safari):',
+                            error
+                        );
+                    });
+                });
+                video.addEventListener('canplay', () => {
+                    // Ensure video is ready before trying to play
+                    video.style.display = 'block';
+                    // video.play().catch(() => {}); // Autoplay can be attempted here too
+                });
+            } else {
+                console.error('HLS not supported in this browser');
+                container.innerHTML =
+                    '<p style="color: white; padding: 20px;">Sorry, HLS video playback is not supported in your browser.</p>';
             }
-        }
-        video.style.display = 'block';
-        video.play().catch((error) => {
-            console.log('Video autoplay prevented:', error);
-            // Autoplay might be blocked, user interaction might be needed.
-        });
-      });
-
-      hls.on(Hls.Events.LEVEL_SWITCHED, (_evt, data) => {
-        const { level } = data; // level is an index
-        if (hls.levels[level]) {
-            const { width, height } = hls.levels[level];
-            if (width && height) {
-                container.style.aspectRatio = `${width} / ${height}`;
-            }
-        }
-      });
-
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native HLS (Safari)
-      video.src = url;
-      video.addEventListener('loadedmetadata', () => {
-        const w = video.videoWidth;
-        const h = video.videoHeight;
-        if (w && h) { // Ensure w and h are valid before setting aspect ratio
-            container.style.aspectRatio = `${w} / ${h}`;
-        }
-        video.style.display = 'block';
-         video.play().catch((error) => {
-            console.log('Video autoplay prevented (Safari):', error);
-        });
-      });
-       video.addEventListener('canplay', () => { // Ensure video is ready before trying to play
-        video.style.display = 'block';
-        // video.play().catch(() => {}); // Autoplay can be attempted here too
-      });
-    } else {
-      console.error('HLS not supported in this browser');
-      container.innerHTML = '<p style="color: white; padding: 20px;">Sorry, HLS video playback is not supported in your browser.</p>';
-    }
-  </script>
-</body>
+        </script>
+    </body>
 </html>
