@@ -8,16 +8,16 @@
   <style>
     :root {
       --bg-color: #4A4A4D; /* Dark grey from screenshot */
-      --text-color: #E0E0E0; /* Light grey for text */
+      --text-color: #899390; /* Updated text color */
       --content-max-width: 1200px; /* Max width for the main content column */
-      --base-padding: clamp(15px, 3vw, 30px); /* Responsive padding */
-      --logo-height: clamp(40px, 5vh, 50px); /* Responsive logo height */
+      --base-padding: clamp(15px, 4vw, 30px); /* Responsive padding */
+      --logo-height: clamp(45px, 7vh, 65px); /* Responsive logo height */
       --footer-font-size: clamp(10px, 1.5vh, 12px); /* Responsive footer font */
     }
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: "DIN Medium", Arial, Helvetica, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
       line-height: 1.6;
@@ -48,12 +48,13 @@
     }
 
     header {
-      padding-bottom: var(--base-padding);
+      /* Removed padding-bottom from here, will control spacing via content-wrapper gap or main margin-top */
     }
 
     .logo {
       height: var(--logo-height);
       width: auto;
+      display: block; /* Ensures it behaves as a block for margins if needed */
     }
 
     main {
@@ -62,19 +63,32 @@
       justify-content: center;
       align-items: center;
       width: 100%; /* Ensure main takes up available width in content-wrapper */
+      /* Add some vertical spacing */
+      margin-top: clamp(15px, 3vh, 30px);
+      margin-bottom: clamp(15px, 3vh, 30px);
     }
 
     /* Video Player Styles - integrated and adjusted */
     .video-container {
       width: 100%;
-      /* max-width: 800px; */ /* Keep commented or adjust if needed */
-      aspect-ratio: 16 / 9;
+      /* Set a max-width for the video container itself, 
+         e.g., 90% of its parent (main) to leave some background visible,
+         or a fixed pixel value like in the original PSD.
+         This will help make it feel more like the PSD's black frame. */
+      max-width: 85%; /* Adjust as needed, e.g. 800px, 900px etc. */
+      margin-left: auto; /* Center the video container if max-width is less than 100% */
+      margin-right: auto; /* Center the video container */
+      
+      aspect-ratio: 16 / 9; /* JS will try to update this */
       background: black;
       position: relative;
-      margin-top: clamp(10px, 2vh, 20px); /* Responsive margin */
-      margin-bottom: clamp(10px, 2vh, 20px); /* Responsive margin */
-      /* Ensure it doesn't push out of the content-wrapper unexpectedly */
-      max-width: 100%; 
+      /* Remove top/bottom margins here if 'main' handles it */
+      /* margin-top: clamp(10px, 2vh, 20px); */
+      /* margin-bottom: clamp(10px, 2vh, 20px); */
+      
+      /* Add a max-height based on viewport height to prevent it from being too tall on mobile */
+      max-height: 75vh; /* 75% of the viewport height */
+      overflow: hidden; /* Ensure video doesn't spill out if aspect ratios mismatch badly */
     }
 
     .video-container video {
@@ -82,22 +96,25 @@
       height: 100%;
       object-fit: contain; /* Letterboxes if aspect ratio mismatch */
       display: none;       /* Unhidden by script when ready */
+      /* The video itself should fill the container, but max-height on container will limit it */
     }
     /* End Video Player Styles */
 
     footer {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: center; /* Vertically center align items */
       padding-top: var(--base-padding);
       font-size: var(--footer-font-size);
       flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-      gap: 10px; /* Space between items if they wrap */
-      border-top: 1px solid rgba(255, 255, 255, 0.1); /* Optional subtle separator */
+      gap: 10px; /* Reduced gap slightly */
+      border-top: 1px solid rgba(137, 147, 144, 0.2); /* Use new text color with alpha for border */
+      /* Text alignment for children will be default (left) */
     }
 
     .footer-left, .footer-right {
       flex-basis: auto; /* Allow natural sizing */
+      /* On smaller screens when they stack, make them full width */
     }
 
     .decorative-shapes-container {
@@ -106,13 +123,13 @@
       top: 50%;
       transform: translateY(-50%);
       
-      /* Adjust width constraints */
-      width: clamp(100px, 20vw, 250px); /* Control width more directly */
-      max-width: 30%; /* Max 30% of the parent's width (page-container) */
+      /* Adjusted width and max-width for better scaling */
+      width: clamp(80px, 15vw, 200px); 
+      max-width: 25%; 
       height: auto;   /* Let height adjust based on the image's aspect ratio and new width */
       
       /* SVG max height to prevent it from becoming too tall on certain aspect ratios */
-      max-height: clamp(200px, 35vh, 346.44px); 
+      max-height: clamp(150px, 30vh, 300px);
       z-index: 0;
     }
 
@@ -125,34 +142,62 @@
 
     /* Responsive Adjustments */
     @media (max-width: 1024px) { /* Tablets */
-      /* :root values will now use clamp, specific overrides might not be as necessary */
-      /* but can be kept for finer control */
+      .video-container {
+        max-width: 90%; /* Allow video to be a bit wider on tablets */
+        max-height: 70vh;
+      }
       .decorative-shapes-container {
-        width: clamp(80px, 18vw, 200px);
+        width: clamp(70px, 12vw, 180px);
         opacity: 0.8;
-        /* right: 10px; /* no longer needed if right:0 on page-container */
       }
     }
 
     @media (max-width: 768px) { /* Mobile */
+      :root {
+         /* Further increase logo base size on mobile if still too small */
+        --logo-height: clamp(50px, 8vh, 60px);
+      }
       .content-wrapper {
-        padding-left: 5px; /* Add slight padding if content touches edges */
-        padding-right: 5px;
+        /* padding-left: 5px; 
+        padding-right: 5px; */ /* Padding is handled by page-container's clamp */
+      }
+      .video-container {
+        max-width: 100%; /* Video can take more width on mobile */
+        max-height: 60vh; /* Reduce max height further on mobile */
       }
       footer {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-start; /* Align text to the left for stacked items */
+        gap: 5px; /* Smaller gap for stacked footer items */
+      }
+      .footer-left, .footer-right {
+        width: 100%; /* Make footer text blocks take full width when stacked */
+        text-align: center; /* Center footer text on mobile */
       }
       .decorative-shapes-container {
-        width: clamp(60px, 15vw, 150px);
-        opacity: 0.6;
-        /* right: 5px; /* no longer needed */
+        width: clamp(60px, 15vw, 120px);
+        max-height: clamp(100px, 20vh, 200px);
+        opacity: 0.7;
+         /* Optionally move it slightly more into the padding area if needed */
+        right: calc(var(--base-padding) / 4);
       }
     }
 
     @media (max-width: 480px) { /* Small Mobile */
+      :root {
+        --logo-height: clamp(45px, 7vh, 55px);
+      }
+       .video-container {
+        max-height: 50vh; 
+      }
       .decorative-shapes-container {
-        display: none;
+         /* display: none; */ /* Keep it, but smaller */
+        width: clamp(50px, 12vw, 80px);
+        opacity: 0.6;
+        right: 5px; /* Closer to edge on very small screens */
+      }
+       .footer-left, .footer-right {
+        font-size: 0.9em; /* Slightly smaller font for footer on tiny screens */
       }
     }
 
