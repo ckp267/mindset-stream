@@ -172,62 +172,11 @@
                 flex-basis: auto; /* Allow natural sizing */
                 /* On smaller screens when they stack, make them full width */
             }
-            @media (max-width: 1600px) {
-                /* Tablets */
-                .video-container {
-                    max-width: 85%;
-                    max-height: 70vh;
-                }
-            }
-            /* Responsive Adjustments */
-            @media (max-width: 1024px) {
-                /* Tablets */
-                .video-container {
-                    max-width: 60%;
-                }
-            }
-
-            @media (max-width: 768px) {
-                /* Mobile */
-                :root {
-                    /* Further increase logo base size on mobile if still too small */
-                    --logo-height: clamp(50px, 8vh, 60px);
-                }
-                .video-container {
-                    max-width: 65%; /* Video can take more width on mobile */
-                    max-height: 60vh; /* Reduce max height further on mobile */
-                }
-                footer {
-                    flex-direction: column;
-                    align-items: flex-start; /* Align text to the left for stacked items */
-                    gap: 5px; /* Smaller gap for stacked footer items */
-                }
-                .footer-left,
-                .footer-right {
-                    width: 100%; /* Make footer text blocks take full width when stacked */
-                    text-align: center; /* Center footer text on mobile */
-                }
-            }
-
-            @media (max-width: 480px) {
-                /* Small Mobile */
-                :root {
-                    --logo-height: clamp(45px, 7vh, 55px);
-                }
-                .video-container {
-                    max-height: 50vh;
-                }
-                .footer-left,
-                .footer-right {
-                    font-size: 0.9em; /* Slightly smaller font for footer on tiny screens */
-                }
-            }
-
             /* Sliding Menu Styles */
             .sliding-menu {
                 position: fixed;
                 top: 0;
-                right: -100%; /* Start fully off-screen */
+                right: -100%;
                 width: var(--menu-width);
                 height: 100vh;
                 background-color: var(--menu-bg-color);
@@ -236,8 +185,7 @@
                 box-shadow: -2px 0 10px var(--shadow-color);
                 color: var(--menu-text-color);
                 padding: var(--base-padding);
-                display: flex;
-                flex-direction: column;
+                overflow-y: auto;
             }
 
             .sliding-menu.open {
@@ -263,10 +211,30 @@
                 opacity: 0.8;
             }
 
+            .menu-content {
+                padding-top: 40px; /* Space for close button */
+                min-height: calc(
+                    100% - 40px
+                ); /* Ensure content takes full height minus close button space */
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .sliding-menu::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            .sliding-menu {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+
             .menu-section {
                 margin-top: 15px;
                 position: relative;
-                padding-bottom: 20px;
+                padding-bottom: 15px;
             }
 
             .menu-section::after {
@@ -322,14 +290,17 @@
                 margin-right: 10px;
             }
 
+            .liberty-life-logo-container {
+                margin-top: 20px;
+                padding-bottom: 115px;
+                background-color: var(--menu-bg-color);
+            }
+
             .liberty-life-logo {
-                margin-top: auto;
                 width: 50%;
                 height: auto;
                 display: block;
-                margin-left: auto;
-                margin-right: auto;
-                margin-bottom: 115px;
+                margin: 40px auto 115px;
             }
 
             header {
@@ -339,6 +310,63 @@
                 width: 100%;
                 position: relative;
                 padding-bottom: var(--base-padding);
+            }
+
+            @media (max-width: 1600px) {
+                /* Tablets */
+                .video-container {
+                    max-width: 85%;
+                    max-height: 70vh;
+                }
+            }
+            /* Responsive Adjustments */
+            @media (max-width: 1024px) {
+                /* Tablets */
+                .video-container {
+                    max-width: 70%;
+                }
+                .menu-content {
+                    padding-top: 25px;
+                }
+                header {
+                    padding-bottom: 25px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                /* Mobile */
+                :root {
+                    /* Further increase logo base size on mobile if still too small */
+                    --logo-height: clamp(50px, 8vh, 60px);
+                }
+                .video-container {
+                    max-width: 80%; /* Video can take more width on mobile */
+                    max-height: 60vh; /* Reduce max height further on mobile */
+                }
+                footer {
+                    flex-direction: column;
+                    align-items: flex-start; /* Align text to the left for stacked items */
+                    gap: 5px; /* Smaller gap for stacked footer items */
+                }
+                .footer-left,
+                .footer-right {
+                    width: 100%; /* Make footer text blocks take full width when stacked */
+                    text-align: center; /* Center footer text on mobile */
+                }
+            }
+
+            @media (max-width: 480px) {
+                /* Small Mobile */
+                :root {
+                    --logo-height: clamp(45px, 7vh, 55px);
+                }
+                .video-container {
+                    max-height: 50vh;
+                }
+                .footer-left,
+                .footer-right {
+                    font-size: 0.9em; /* Slightly smaller font for footer on tiny screens */
+                }
             }
         </style>
     </head>
@@ -367,23 +395,25 @@
                 <div class="sliding-menu" id="slidingMenu">
                     <button class="close-button" id="closeMenu">×</button>
 
-                    <div class="menu-section">
-                        <div class="menu-section-title">Tv schedules</div>
-                        <a href="#" class="menu-link">High school</a>
-                        <a href="#" class="menu-link">Primary school</a>
-                    </div>
+                    <div class="menu-content">
+                        <div class="menu-section">
+                            <div class="menu-section-title">Tv schedules</div>
+                            <a href="#" class="menu-link">High school</a>
+                            <a href="#" class="menu-link">Primary school</a>
+                        </div>
 
-                    <div class="menu-section">
-                        <div class="menu-section-title">Gets apps</div>
-                        <a href="#" class="menu-link">Learn</a>
-                        <a href="#" class="menu-link">Tenfold</a>
-                    </div>
+                        <div class="menu-section">
+                            <div class="menu-section-title">Gets apps</div>
+                            <a href="#" class="menu-link">Learn</a>
+                            <a href="#" class="menu-link">Tenfold</a>
+                        </div>
 
-                    <img
-                        src="Liberty Life Logo.svg"
-                        alt="Liberty Life"
-                        class="liberty-life-logo"
-                    />
+                        <img
+                            src="Liberty Life Logo.svg"
+                            alt="Liberty Life"
+                            class="liberty-life-logo"
+                        />
+                    </div>
                 </div>
 
                 <main>
