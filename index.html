@@ -27,10 +27,25 @@
             :root {
                 --bg-color: #4a4a4d; /* Dark grey from screenshot */
                 --text-color: #899390; /* Updated text color */
+                --border-color: #fff;
+                --menu-bg-color: #00afc0;
+                --menu-text-color: #fff;
+                --video-bg-color: #000;
+                --overlay-bg-color: rgba(0, 0, 0, 0.5);
+                --shadow-color: rgba(0, 0, 0, 0.2);
+
                 --content-max-width: 1200px; /* Max width for the main content column */
                 --base-padding: clamp(15px, 4vw, 30px); /* Responsive padding */
-                --logo-height: clamp(45px, 7vh, 65px);
-                --footer-font-size: clamp(10px, 1.5vh, 12px);
+                --logo-height: clamp(
+                    45px,
+                    7vh,
+                    65px
+                ); /* Responsive logo height */
+                --footer-font-size: clamp(
+                    10px,
+                    1.5vh,
+                    12px
+                ); /* Responsive footer font */
                 --menu-width: 300px; /* Width of the sliding menu */
             }
 
@@ -124,7 +139,7 @@
                 margin-right: auto; /* Center the video container */
 
                 aspect-ratio: 16 / 9; /* JS will try to update this */
-                background: black;
+                background: var(--video-bg-color);
                 position: relative;
 
                 /* Add a max-height based on viewport height to prevent it from being too tall on mobile */
@@ -149,7 +164,7 @@
                 font-size: var(--footer-font-size);
                 flex-wrap: wrap; /* Allow items to wrap on smaller screens */
                 gap: 10px; /* Reduced gap slightly */
-                border-top: 2px solid #fff; /* Use new text color with alpha for border */
+                border-top: 2px solid var(--border-color); /* Use new text color with alpha for border */
                 /* Text alignment for children will be default (left) */
             }
 
@@ -210,16 +225,16 @@
                 right: -100%; /* Start fully off-screen */
                 width: var(--menu-width);
                 height: 100vh;
-                background-color: #00afc0;
+                background-color: var(--menu-bg-color);
                 transition: right 0.3s ease;
                 z-index: 1000;
-                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
-                color: white;
+                box-shadow: -2px 0 10px var(--shadow-color);
+                color: var(--menu-text-color);
                 padding: var(--base-padding);
             }
 
             .sliding-menu a {
-                color: white;
+                color: var(--menu-text-color);
                 text-decoration: none;
                 display: block;
                 padding: 15px 0;
@@ -240,7 +255,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
+                background-color: var(--overlay-bg-color);
                 display: none;
                 z-index: 999;
             }
@@ -255,7 +270,7 @@
                 align-items: center;
                 width: 100%;
                 position: relative;
-                border-bottom: 2px solid #fff;
+                border-bottom: 2px solid var(--border-color);
                 padding-bottom: var(--base-padding);
             }
         </style>
