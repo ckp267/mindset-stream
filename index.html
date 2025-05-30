@@ -356,20 +356,27 @@
             }
 
             .menu-logo-track {
-                display: flex;
-                transition: transform 0.5s ease-in-out;
+                display: block; /* Changed from flex */
+                position: relative;
                 height: 100%;
-                align-items: center;
-                width: 1500px; /* Total width for 5 logos × 300px each */
-                transform: translateX(0px); /* Ensure it starts at 0 */
+                width: 300px; /* Just one logo width */
             }
 
             .menu-logo {
+                position: absolute; /* Stack logos on top of each other */
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* Center each logo */
                 width: 300px;
                 height: auto;
                 display: block;
-                flex-shrink: 0;
+                opacity: 0; /* Hidden by default */
+                transition: opacity 1.5s ease-in-out; /* Slower fade transition */
                 object-fit: contain;
+            }
+
+            .menu-logo.active {
+                opacity: 1; /* Show active logo */
             }
 
             header {
@@ -534,7 +541,10 @@
                         </div>
                         <div class="footer-left-text__second">
                             Reg Number: 2002 / 003517 / 08 - South Africa |
-                            <a href="PrivacyPolicy.html" class="link"
+                            <a
+                                href="PrivacyPolicy.html"
+                                class="link"
+                                target="_blank"
                                 >Trust and Safety
                             </a>
                         </div>
@@ -624,7 +634,7 @@
             const logos = document.querySelectorAll('.menu-logo');
             let currentIndex = 0;
             const totalLogos = logos.length;
-            const slideInterval = 5000; // 5 seconds
+            const slideInterval = 8000; // 8 seconds: 5s visible + 3s transition (1.5s fade out + 1.5s fade in)
             let carouselInterval = null; // Store the interval ID
 
             // Logo names for debugging
@@ -637,39 +647,24 @@
             ];
 
             /**
-             * Moves the carousel to the next logo with slide animation
+             * Moves the carousel to the next logo with fade animation
              */
             function nextLogo() {
-                const previousIndex = currentIndex;
-                currentIndex = (currentIndex + 1) % totalLogos;
-                const translateX = -currentIndex * 300; // Move by 300px for each logo
-
-                // If we're going from last logo (4) back to first logo (0), disable transition temporarily
-                if (previousIndex === totalLogos - 1 && currentIndex === 0) {
-                    logoTrack.style.transition = 'none'; // Disable transition
-                    logoTrack.style.transform = `translateX(${translateX}px)`;
-                    console.log(
-                        `Jumping instantly to logo ${
-                            currentIndex + 1
-                        }/${totalLogos} (${
-                            logoNames[currentIndex]
-                        }), translateX: ${translateX}px`
-                    );
-
-                    // Re-enable transition after a short delay
-                    setTimeout(() => {
-                        logoTrack.style.transition =
-                            'transform 0.5s ease-in-out';
-                    }, 50);
-                } else {
-                    // Normal transition
-                    console.log(
-                        `Moving to logo ${currentIndex + 1}/${totalLogos} (${
-                            logoNames[currentIndex]
-                        }), translateX: ${translateX}px`
-                    );
-                    logoTrack.style.transform = `translateX(${translateX}px)`;
+                // Hide current logo first
+                if (logos[currentIndex]) {
+                    logos[currentIndex].classList.remove('active');
                 }
+
+                // Wait for fade out to complete before showing next logo
+                setTimeout(() => {
+                    // Move to next logo
+                    currentIndex = (currentIndex + 1) % totalLogos;
+
+                    // Show next logo after fade out is complete
+                    if (logos[currentIndex]) {
+                        logos[currentIndex].classList.add('active');
+                    }
+                }, 1500); // Wait for the 1.5s fade out to complete
             }
 
             /**
@@ -678,18 +673,21 @@
             function startLogoCarousel() {
                 // Reset to first logo when starting
                 currentIndex = 0;
-                logoTrack.style.transform = `translateX(0px)`;
-                console.log(
-                    `Starting carousel - showing first logo (${logoNames[currentIndex]})`
-                );
-                console.log('Total logos found:', totalLogos);
+
+                // Hide all logos first
+                logos.forEach((logo) => logo.classList.remove('active'));
+
+                // Show first logo
+                if (logos[currentIndex]) {
+                    logos[currentIndex].classList.add('active');
+                }
 
                 // Clear any existing interval
                 if (carouselInterval) {
                     clearInterval(carouselInterval);
                 }
 
-                // Start the carousel interval after a delay to show first logo
+                // Start the carousel interval - every 8 seconds
                 carouselInterval = setInterval(nextLogo, slideInterval);
             }
 
@@ -701,9 +699,8 @@
                     clearInterval(carouselInterval);
                     carouselInterval = null;
                 }
-                // Reset to first logo when stopping
-                currentIndex = 0;
-                logoTrack.style.transform = `translateX(0px)`;
+                // Hide all logos when stopping
+                logos.forEach((logo) => logo.classList.remove('active'));
             }
 
             // Menu functionality
