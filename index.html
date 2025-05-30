@@ -41,9 +41,9 @@
                     5vw
                 ); /* Responsive logo height */
                 --footer-font-size: clamp(
-                    10px,
-                    1.5vh,
-                    12px
+                    15px,
+                    2.5vh,
+                    25px
                 ); /* Responsive footer font */
                 --menu-width: 300px; /* Width of the sliding menu */
             }
@@ -53,6 +53,20 @@
                 font-style: normal;
                 font-weight: 400;
                 src: url('fonts/DIN-Medium-Regular.ttf');
+            }
+
+            @font-face {
+                font-family: 'Cubano';
+                font-style: normal;
+                font-weight: 400;
+                src: url('fonts/Cubano.ttf');
+            }
+
+            @font-face {
+                font-family: 'DIN Condensed';
+                font-style: normal;
+                font-weight: 400;
+                src: url('fonts/D-DINCondensed.otf');
             }
 
             body {
@@ -173,7 +187,26 @@
                 font-size: var(--footer-font-size);
                 flex-wrap: wrap; /* Allow items to wrap on smaller screens */
                 gap: 10px; /* Reduced gap slightly */
+                color: #fff;
                 /* Text alignment for children will be default (left) */
+            }
+
+            footer .footer-left-text__first {
+                font-family: 'Cubano';
+            }
+
+            footer .footer-left-text__second,
+            footer .footer-left-text__second a.link {
+                color: #fff;
+                font-family: 'DIN Condensed';
+                font-size: clamp(12px, 2vh, 17px);
+                transition: all 0.4s ease;
+            }
+
+            footer .footer-left-text__second a.link:hover,
+            footer .footer-left-text__second a.link:active,
+            footer .footer-left-text__second a.link:focus {
+                color: var(--menu-bg-color);
             }
 
             .footer-left,
@@ -359,7 +392,6 @@
                 .footer-left,
                 .footer-right {
                     width: 100%; /* Make footer text blocks take full width when stacked */
-                    text-align: center; /* Center footer text on mobile */
                 }
             }
 
@@ -442,15 +474,13 @@
 
                 <footer>
                     <div class="footer-left">
-                        <div>
+                        <div class="footer-left-text__first">
                             MINDSET NETWORK NPC IS A REGISTERED
                             NOT-FOR-PROFIT<br />
                         </div>
-                        <div>
+                        <div class="footer-left-text__second">
                             Reg Number: 2002 / 003517 / 08 - South Africa |
-                            <a
-                                href="https://learn.co.za/PrivacyPolicy.html"
-                                class="link"
+                            <a href="PrivacyPolicy.html" class="link"
                                 >Trust and Safety
                             </a>
                         </div>
