@@ -332,16 +332,44 @@
                 margin-right: 10px;
             }
 
-            .liberty-life-logo-container {
-                margin-top: 20px;
-                padding-bottom: 115px;
+            .menu-logo-container {
+                margin-top: auto; /* Push to bottom */
+                padding-bottom: 0; /* Remove padding */
                 background-color: var(--menu-bg-color);
+                position: relative;
+                overflow: hidden;
+                height: auto; /* Auto height instead of fixed */
+                padding-bottom: 30px; /* 30px bottom margin */
             }
 
-            .liberty-life-logo {
+            .menu-logo-carousel {
+                position: relative; /* Changed from absolute */
+                bottom: auto; /* Remove bottom positioning */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 300px; /* Fixed width to show one logo at a time */
+                height: 320px; /* Height for logo display area */
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start; /* Align to start instead of center */
+            }
+
+            .menu-logo-track {
+                display: flex;
+                transition: transform 0.5s ease-in-out;
+                height: 100%;
+                align-items: center;
+                width: 1500px; /* Total width for 5 logos × 300px each */
+                transform: translateX(0px); /* Ensure it starts at 0 */
+            }
+
+            .menu-logo {
+                width: 300px;
                 height: auto;
                 display: block;
-                margin: 40px auto 115px;
+                flex-shrink: 0;
+                object-fit: contain;
             }
 
             header {
@@ -458,11 +486,37 @@
                             <a href="#" class="menu-link">Tenfold</a>
                         </!--div-->
 
-                        <img
-                            src="Liberty Life Logo.svg"
-                            alt="Liberty Life"
-                            class="liberty-life-logo"
-                        />
+                        <div class="menu-logo-container">
+                            <div class="menu-logo-carousel">
+                                <div class="menu-logo-track" id="logoTrack">
+                                    <img
+                                        src="Liberty Life Logo.svg"
+                                        alt="Liberty Life"
+                                        class="menu-logo"
+                                    />
+                                    <img
+                                        src="Standard Bank.svg"
+                                        alt="Standard Bank"
+                                        class="menu-logo"
+                                    />
+                                    <img
+                                        src="Intelsat.svg"
+                                        alt="Intelsat"
+                                        class="menu-logo"
+                                    />
+                                    <img
+                                        src="Multichoice.svg"
+                                        alt="Multichoice"
+                                        class="menu-logo"
+                                    />
+                                    <img
+                                        src="Nelson Mandela.svg"
+                                        alt="Nelson Mandela"
+                                        class="menu-logo"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -565,6 +619,93 @@
                     '<p style="color: white; padding: 20px;">Sorry, HLS video playback is not supported in your browser.</p>';
             }
 
+            // Logo Carousel functionality
+            const logoTrack = document.getElementById('logoTrack');
+            const logos = document.querySelectorAll('.menu-logo');
+            let currentIndex = 0;
+            const totalLogos = logos.length;
+            const slideInterval = 5000; // 5 seconds
+            let carouselInterval = null; // Store the interval ID
+
+            // Logo names for debugging
+            const logoNames = [
+                'Liberty Life',
+                'Standard Bank',
+                'Intelsat',
+                'Multichoice',
+                'Nelson Mandela',
+            ];
+
+            /**
+             * Moves the carousel to the next logo with slide animation
+             */
+            function nextLogo() {
+                const previousIndex = currentIndex;
+                currentIndex = (currentIndex + 1) % totalLogos;
+                const translateX = -currentIndex * 300; // Move by 300px for each logo
+
+                // If we're going from last logo (4) back to first logo (0), disable transition temporarily
+                if (previousIndex === totalLogos - 1 && currentIndex === 0) {
+                    logoTrack.style.transition = 'none'; // Disable transition
+                    logoTrack.style.transform = `translateX(${translateX}px)`;
+                    console.log(
+                        `Jumping instantly to logo ${
+                            currentIndex + 1
+                        }/${totalLogos} (${
+                            logoNames[currentIndex]
+                        }), translateX: ${translateX}px`
+                    );
+
+                    // Re-enable transition after a short delay
+                    setTimeout(() => {
+                        logoTrack.style.transition =
+                            'transform 0.5s ease-in-out';
+                    }, 50);
+                } else {
+                    // Normal transition
+                    console.log(
+                        `Moving to logo ${currentIndex + 1}/${totalLogos} (${
+                            logoNames[currentIndex]
+                        }), translateX: ${translateX}px`
+                    );
+                    logoTrack.style.transform = `translateX(${translateX}px)`;
+                }
+            }
+
+            /**
+             * Start the logo carousel
+             */
+            function startLogoCarousel() {
+                // Reset to first logo when starting
+                currentIndex = 0;
+                logoTrack.style.transform = `translateX(0px)`;
+                console.log(
+                    `Starting carousel - showing first logo (${logoNames[currentIndex]})`
+                );
+                console.log('Total logos found:', totalLogos);
+
+                // Clear any existing interval
+                if (carouselInterval) {
+                    clearInterval(carouselInterval);
+                }
+
+                // Start the carousel interval after a delay to show first logo
+                carouselInterval = setInterval(nextLogo, slideInterval);
+            }
+
+            /**
+             * Stop the logo carousel
+             */
+            function stopLogoCarousel() {
+                if (carouselInterval) {
+                    clearInterval(carouselInterval);
+                    carouselInterval = null;
+                }
+                // Reset to first logo when stopping
+                currentIndex = 0;
+                logoTrack.style.transform = `translateX(0px)`;
+            }
+
             // Menu functionality
             const closeButton = document.getElementById('closeMenu');
             const slidingMenu = document.getElementById('slidingMenu');
@@ -576,7 +717,16 @@
             menuIcon.addEventListener('click', toggleMenu);
 
             function toggleMenu() {
+                const isOpening = !slidingMenu.classList.contains('open');
                 slidingMenu.classList.toggle('open');
+
+                if (isOpening) {
+                    // Menu is opening - start carousel
+                    startLogoCarousel();
+                } else {
+                    // Menu is closing - stop carousel
+                    stopLogoCarousel();
+                }
             }
 
             // Close menu when pressing Escape key
