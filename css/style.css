@@ -1,0 +1,128 @@
+ /*font weight*/
+/*media max-width*/
+@font-face {
+  font-family: 'NotoSans SemiBold';
+  font-style: normal;
+  font-weight: 400;
+  src: url("NotoSans-SemiBold.ttf"); }
+@font-face {
+  font-family: 'Noto Sans ExtraCondensed Bold';
+  font-style: normal;
+  font-weight: 400;
+  src: url("NotoSans-ExtraCondensedBold.ttf"); }
+@font-face {
+  font-family: 'Cubano';
+  font-style: normal;
+  font-weight: 400;
+  src: url("Cubano.otf"); }
+@font-face {
+  font-family: 'Guardian';
+  font-style: normal;
+  font-weight: 400;
+  src: url("GuardianSansBlack.otf"); }
+
+.legals {
+font-family: NotoSans SemiBold;
+	font-size: 10px;
+	font-color: #FFB81A;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 15px;
+	padding-top:15px;}
+
+
+@media (min-width: 1396px) {
+  .col-xlg-1 {
+    width: 8.33333%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-2 {
+    width: 16.66667%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-3 {
+    width: 25%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-4 {
+    width: 33.33333%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-5 {
+    width: 41.66667%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-6 {
+    width: 50%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-7 {
+    width: 58.33333%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-8 {
+    width: 66.66667%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-9 {
+    width: 75%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-10 {
+    width: 83.33333%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-11 {
+    width: 91.66667%; } }
+
+@media (min-width: 1396px) {
+  .col-xlg-12 {
+    width: 100%; } }
+
+[class^="col-xlg-"] {
+  float: left; }
+
+.whiteBG {
+  background-color: #fff; }
+
+.removePadding [class^='col-'] {
+  padding-left: 0;
+  padding-right: 0; }
+
+@media (max-width: 1396px) {
+  .xlg-visible {
+    display: none !important; } }
+
+@media (min-width: 1397px) {
+  .container {
+    width: 1396px; } }
+
+@media (max-width: 991px) {
+  .desktop-visible {
+    display: none !important; } }
+
+@media (max-width: 767px) {
+  .container, [class^="col-"] {
+    padding-right: 10px;
+    padding-left: 10px; }
+  .row {
+    margin-left: -40px;
+    margin-right: 0px; } }
+
+
+p .copywhite  {
+	font-family: "NotoSans SemiBold";
+	  font-color: #fff;
+	  font-variant-caps: all-small-caps;
+      font-size: 14px;
+      display: block;
+     line-height: 22px;
+      word-break: break-all;}
+
+.centerSection p {
+    font-size: 14px;
+    line-height: 18px;
+    color: #FFFFFF;
+    font-family: "NotoSans SemiBold";
+}
+.container{padding-top: 50px;}

@@ -64,7 +64,16 @@
                 /* Ensure body itself doesn't cause overflow if page-container is full width */
                 overflow-x: hidden;
             }
-
+            a.link {
+                margin: 0;
+                font-family: 'DIN Medium', Arial, Helvetica, sans-serif;
+                color: var(--text-color);
+            }
+            .link:hover {
+                margin: 0;
+                font-family: 'DIN Medium', Arial, Helvetica, sans-serif;
+                color: var(--menu-bg-color);
+            }
             .page-container {
                 min-height: 100vh;
                 display: flex;
@@ -433,11 +442,22 @@
 
                 <footer>
                     <div class="footer-left">
-                        MINDSET NETWORK NPC IS A REGISTERED NOT-FOR-PROFIT
+                        <div>
+                            MINDSET NETWORK NPC IS A REGISTERED
+                            NOT-FOR-PROFIT<br />
+                        </div>
+                        <div>
+                            Reg Number: 2002 / 003517 / 08 - South Africa |
+                            <a
+                                href="https://learn.co.za/PrivacyPolicy.html"
+                                class="link"
+                                >Trust and Safety
+                            </a>
+                        </div>
                     </div>
-                    <div class="footer-right">
-                        Reg Number: 2002 / 003517 / 08 - South Africa
-                    </div>
+                    <!-- <div class="footer-right">
+                        
+                    </div> -->
                 </footer>
             </div>
         </div>
